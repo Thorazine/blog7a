@@ -7,12 +7,18 @@ use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
+
+    public function index()
+    {
+        return view('index');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $slug)
+    public function page(Request $request, $slug)
     {
     	$page = Page::where('slug', $slug)->firstOrFail();
 
