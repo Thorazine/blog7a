@@ -5,5 +5,8 @@
 
 
 @section('content')
+
+    <img src="{{ $page->image->url }}">
+
 	{!! $page->body !!}
 @stop

@@ -20,7 +20,9 @@ class PageController extends Controller
      */
     public function page(Request $request, $slug)
     {
-    	$page = Page::where('slug', $slug)->firstOrFail();
+    	$page = Page::with('image')
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         return view('page')
         	->with('page', $page);

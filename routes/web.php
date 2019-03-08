@@ -18,7 +18,7 @@ Route::get('/', 'PageController@index')->name('index');
 
 Auth::routes();
 
-Route::get('page/{slug}', 'PageController@page')->name('page');
+Route::get('pages/{slug}', 'PageController@page')->name('page');
 
 Route::get('/home', 'HomeController@index')->name('home');
 

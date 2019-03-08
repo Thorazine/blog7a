@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Page;
+use App\Image;
 use Exception;
 use DB;
 
@@ -52,6 +53,22 @@ class PageController extends Controller
             $page->body = $request->body;
             $page->save();
 
+            $file = pathinfo($request->image->getClientOriginalName());
+
+            // page id is set!
+            $image = new Image;
+            $image->page_id = $page->id;
+            $image->title = $file['filename'];
+            $image->author = '';
+            $image->filename = str_slug($file['filename']);
+            $image->extension = strtolower($file['extension']);
+            $image->width = 0;
+            $image->height = 0;
+            $image->filesize = 0;
+            $image->save();
+
+            $request->file('image')->storeAs('', $file['filename'].'.'.$file['extension']);
+
             DB::commit();
 
             return redirect()->route('admin.pages.index');
@@ -59,6 +76,8 @@ class PageController extends Controller
         catch(Exception $e) {
             // later
             DB::rollback();
+
+            dd($e->getMessage());
         }
     }
 
