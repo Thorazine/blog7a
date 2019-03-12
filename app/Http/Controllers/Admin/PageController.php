@@ -100,7 +100,10 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-        //
+        $page = Page::findOrFail($id);
+
+        return view('admin.pages.edit')
+            ->with('data', $page);
     }
 
     /**
@@ -116,12 +119,21 @@ class PageController extends Controller
             DB::beginTransaction();
 
             // logica
+            $page = Page::findOrFail($id);
+            $page->title = $request->title;
+            $page->slug = $request->slug;
+            $page->active = ($request->active) ? 1 : 0;
+            $page->body = $request->body;
+            $page->save();
 
             DB::commit();
+
+            return redirect()->route('admin.pages.index');
         }
         catch(Exception $e) {
             // later
             DB::rollback();
+            dd($e->getMessage());
         }
     }
 
