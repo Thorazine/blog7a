@@ -127,6 +127,8 @@ class PageController extends Controller
 
         try {
 
+            dd($request->image);
+
             DB::beginTransaction();
 
             // logica
@@ -136,6 +138,32 @@ class PageController extends Controller
             $page->active = ($request->active) ? 1 : 0;
             $page->body = $request->body;
             $page->save();
+
+            $oldImage = $page->image;
+
+            if($request->file('image')) {
+                $file = pathinfo($request->image->getClientOriginalName());
+
+                // page id is set!
+                $image = new Image;
+                $image->page_id = $page->id;
+                $image->title = $file['filename'];
+                $image->author = '';
+                $image->filename = str_slug($file['filename']);
+                $image->extension = strtolower($file['extension']);
+                $image->width = 0;
+                $image->height = 0;
+                $image->filesize = 0;
+                $image->save();
+
+                $request->file('image')->storeAs('', $file['filename'].'.'.$file['extension']);
+            }
+
+            // old image verwijderen als deze bestaat
+            if($oldImage || !$request->image) {
+                //verwijder oude image
+
+            }
 
             DB::commit();
 

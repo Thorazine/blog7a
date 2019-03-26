@@ -38,8 +38,11 @@
             </label>
             <div class="col-sm-9">
                 {!! Form::file('image', ['class' => 'form-control-file', 'autocomplete' => 'off']) !!}
+                <button class="btn btn-danger" id="image" type="button">Remove</button>
 
-                {!! Form::hidden('image', $data->image) !!}
+                {!! Form::hidden('image', $data->image->id, ['id' => 'image_hidden']) !!}
+                {{-- {{dd($data->image)}} --}}
+                <img width="100" id="image_preview" src="{{ $data->image->url }}">
             </div>
         </div>
 
@@ -75,4 +78,14 @@
         </div>
 
     {!! Form::close() !!}
+@stop
+
+
+@section('script')
+    <script type="text/javascript">
+        $('#image').click(function(event) {
+            $('#image_hidden').val('');
+            $('#image_preview').remove();
+        });
+    </script>
 @stop
