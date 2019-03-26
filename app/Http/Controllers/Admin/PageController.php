@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PageInsert;
+use App\Http\Requests\PageUpdate;
 use App\Page;
 use App\Image;
 use Exception;
@@ -48,7 +50,7 @@ class PageController extends Controller
             // logica
             $page = new Page;
             $page->title = $request->title;
-            $page->slug = $request->slug;
+            $page->slug = str_slug($request->slug);
             $page->active = ($request->active) ? 1 : 0;
             $page->body = $request->body;
             $page->save();
@@ -115,13 +117,22 @@ class PageController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'slug' => 'required|unique:pages,slug,'.$id.'|max:100',
+            'image' => '',
+            'title' => 'required|max:100',
+            'body' => 'required|max:65000',
+            'active' => 'boolean',
+        ]);
+
         try {
+
             DB::beginTransaction();
 
             // logica
             $page = Page::findOrFail($id);
             $page->title = $request->title;
-            $page->slug = $request->slug;
+            $page->slug = str_slug($request->slug);
             $page->active = ($request->active) ? 1 : 0;
             $page->body = $request->body;
             $page->save();

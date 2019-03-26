@@ -5,8 +5,20 @@
 
     <h2>Pages Edit</h2>
 
+    @if(!$errors->isEmpty())
+        <div class="alert alert-danger">
+            Er is iets mis gegaan met uw invoer.
+            <ul>
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     {!! Form::open(['route' => ['admin.pages.update', $data->id], 'method' => 'PUT', 'files' => true]) !!}
+
+        {!! Form::hidden('id', $data->id) !!}
 
         <div class="form-group row">
             <label class="col-sm-3">
